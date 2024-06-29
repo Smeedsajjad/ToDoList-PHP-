@@ -1,4 +1,5 @@
 <?php
+session_start(); // Start session
 
 include_once 'Database.php';
 
@@ -13,9 +14,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['task'])) {
 
     try {
         $stmt->execute();
-        echo "Task added successfully.";
+        
+        // Set success message in session
+        $_SESSION['alert'] = array(
+            'type' => 'success',
+            'message' => 'Task added successfully!'
+        );
+
+        // Redirect to index.php
+        header('Location: ../../src/index.php');
+        exit;
     } catch(PDOException $e) {
-        echo "Error: " . $e->getMessage();
+        // Set error message in session if insertion fails
+        $_SESSION['alert'] = array(
+            'type' => 'danger',
+            'message' => 'Error: ' . $e->getMessage()
+        );
+
+        // Redirect to index.php
+        header('Location: ../../src/index.php');
+        exit;
     }
 }
-?>

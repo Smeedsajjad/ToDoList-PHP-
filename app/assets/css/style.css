@@ -12,6 +12,10 @@ body {
     font-family: "Playwrite MX", cursive;
     src: url(../fonts/PlaywriteMX-Regular.ttf);
 }
+nav{
+    justify-content: center;
+    display: flex;
+}
 
 #fa{
     color: #a09d93;
