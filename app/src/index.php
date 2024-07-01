@@ -2,7 +2,7 @@
 session_start(); // Start session
 
 // Include Database class
-require_once('../assets/partials/Database.php');
+require_once ('../assets/partials/Database.php');
 
 $database = new Database();
 $conn = $database->getConnection();
@@ -14,7 +14,7 @@ $alert = isset($_SESSION['alert']) ? $_SESSION['alert'] : null;
 unset($_SESSION['alert']);
 
 // Pagination variables
-$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
 $items_per_page = 5;
 $offset = ($page - 1) * $items_per_page;
 
@@ -33,6 +33,7 @@ $total_pages = ceil($total_tasks / $items_per_page);
 
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -48,11 +49,14 @@ $total_pages = ceil($total_tasks / $items_per_page);
         width: 80% !important;
       }
     }
+
     nav {
       justify-content: center;
       display: flex;
     }
-    .active>.page-link, .page-link.active {
+
+    .active>.page-link,
+    .page-link.active {
       z-index: 3;
       color: var(--bs-pagination-active-color);
       background-color: #aaa694;
@@ -60,10 +64,12 @@ $total_pages = ceil($total_tasks / $items_per_page);
     }
   </style>
 </head>
+
 <body>
   <!-- Modal ADD -->
   <form action="../assets/partials/insert.php" method="post">
-    <div class="modal fade" id="addModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+    <div class="modal fade" id="addModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+      aria-labelledby="addModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -85,7 +91,8 @@ $total_pages = ceil($total_tasks / $items_per_page);
   <!-- Modal -->
 
   <!-- Modal EDIT -->
-  <div class="modal fade" id="editModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+  <div class="modal fade" id="editModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="editModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -140,7 +147,8 @@ $total_pages = ceil($total_tasks / $items_per_page);
       <div class="row">
         <div class="col-md-4">
           <!-- Button trigger modals -->
-          <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#addModal" id="addButton">
+          <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#addModal"
+            id="addButton">
             Add List
           </button>
         </div>
@@ -149,58 +157,64 @@ $total_pages = ceil($total_tasks / $items_per_page);
           <input type="text" class="form-control" placeholder="Search" id="searchInput">
         </div>
         <div class="col-md-4">
-          <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#editModal" disabled id="editButton">
+          <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#editModal" disabled
+            id="editButton">
             Edit List
           </button>
-          <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" disabled id="deleteButton">
+          <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" disabled
+            id="deleteButton">
             Delete
           </button>
+          <button type="button" class="btn btn-secondary" id="duplicateButton" disabled>Duplicate</button>
         </div>
       </div>
 
       <!-- Display Bootstrap alert if alert message is set -->
       <?php if ($alert): ?>
-      <div class="alert alert-<?php echo $alert['type']; ?> alert-dismissible fade show mt-3" role="alert">
-        <?php echo $alert['message']; ?>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-      </div>
+        <div class="alert alert-<?php echo $alert['type']; ?> alert-dismissible fade show mt-3" role="alert">
+          <?php echo $alert['message']; ?>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
       <?php endif; ?>
 
       <!-- Display Data from database -->
       <div id="tasksContainer">
         <?php foreach ($tasks as $task): ?>
-        <div class="row mt-5">
-          <div class="col-lg-1 col-md-1 col-sm-1 smx2" style="display: flex; align-items: center; justify-content: center;">
-            <input class="form-check-input p-2" type="radio" name="selectedTask" id="task_<?php echo $task['id']; ?>" value="<?php echo $task['id']; ?>" aria-label="...">
-          </div>
-          <div class="col-lg-11 col-md-11 col-sm-11 smx">
-            <div>
-              <p class="task">
-                <span class="task-id"><?php echo $task['id']; ?></span>
-                <span class="task-content"><?php echo $task['task']; ?></span>
-              </p>
+          <div class="row mt-5">
+            <div class="col-lg-1 col-md-1 col-sm-1 smx2"
+              style="display: flex; align-items: center; justify-content: center;">
+              <input class="form-check-input p-2" type="radio" name="selectedTask" id="task_<?php echo $task['id']; ?>"
+                value="<?php echo $task['id']; ?>" aria-label="...">
+            </div>
+            <div class="col-lg-11 col-md-11 col-sm-11 smx">
+              <div>
+                <p class="task">
+                  <span class="task-id"><?php echo $task['id']; ?></span>
+                  <span class="task-content"><?php echo $task['task']; ?></span>
+                </p>
+              </div>
             </div>
           </div>
-        </div>
 
-        <!-- Delete Confirmation Modal -->
-        <div class="modal fade" id="deleteModal_<?php echo $task['id']; ?>" tabindex="-1" aria-labelledby="deleteModalLabel_<?php echo $task['id']; ?>" aria-hidden="true">
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="deleteModalLabel_<?php echo $task['id']; ?>">Delete Confirmation</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                Are you sure you want to delete this task?
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <a href="../assets/partials/delete.php?id=<?php echo $task['id']; ?>" class="btn btn-danger">Delete</a>
+          <!-- Delete Confirmation Modal -->
+          <div class="modal fade" id="deleteModal_<?php echo $task['id']; ?>" tabindex="-1"
+            aria-labelledby="deleteModalLabel_<?php echo $task['id']; ?>" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="deleteModalLabel_<?php echo $task['id']; ?>">Delete Confirmation</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  Are you sure you want to delete this task?
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                  <a href="../assets/partials/delete.php?id=<?php echo $task['id']; ?>" class="btn btn-danger">Delete</a>
+                </div>
               </div>
             </div>
           </div>
-        </div>
         <?php endforeach; ?>
       </div>
 
@@ -208,16 +222,28 @@ $total_pages = ceil($total_tasks / $items_per_page);
       <div class="row mt-4">
         <nav aria-label="Page navigation">
           <ul class="pagination justify-content-center">
-            <li class="page-item <?php if ($page <= 1) echo 'disabled'; ?>">
-              <a class="page-link" href="<?php if ($page > 1) echo '?page=' . ($page - 1); else echo '#'; ?>" aria-label="Previous">
+            <li class="page-item <?php if ($page <= 1)
+              echo 'disabled'; ?>">
+              <a class="page-link" href="<?php if ($page > 1)
+                echo '?page=' . ($page - 1);
+              else
+                echo '#'; ?>"
+                aria-label="Previous">
                 <span aria-hidden="true">&laquo;</span>
               </a>
             </li>
             <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-            <li class="page-item <?php if ($page == $i) echo 'active'; ?>"><a class="page-link" href="?page=<?php echo $i; ?>"><?php echo $i; ?></a></li>
+              <li class="page-item <?php if ($page == $i)
+                echo 'active'; ?>"><a class="page-link"
+                  href="?page=<?php echo $i; ?>"><?php echo $i; ?></a></li>
             <?php endfor; ?>
-            <li class="page-item <?php if ($page >= $total_pages) echo 'disabled'; ?>">
-              <a class="page-link" href="<?php if ($page < $total_pages) echo '?page=' . ($page + 1); else echo '#'; ?>" aria-label="Next">
+            <li class="page-item <?php if ($page >= $total_pages)
+              echo 'disabled'; ?>">
+              <a class="page-link" href="<?php if ($page < $total_pages)
+                echo '?page=' . ($page + 1);
+              else
+                echo '#'; ?>"
+                aria-label="Next">
                 <span aria-hidden="true">&raquo;</span>
               </a>
             </li>
@@ -227,72 +253,7 @@ $total_pages = ceil($total_tasks / $items_per_page);
     </div>
   </section>
   <script src="./../assets/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js"></script>
-  <script>
-    // Function to filter tasks based on search input
-    function filterTasks() {
-      // Get input value and convert to lowercase for case-insensitive search
-      var query = document.getElementById('searchInput').value.toLowerCase();
-      var tasks = document.querySelectorAll('.task');
-
-      tasks.forEach(function(task) {
-        var taskContent = task.querySelector('.task-content').textContent.toLowerCase();
-        var taskRow = task.closest('.row');
-
-        // Show or hide tasks based on search query
-        if (taskContent.includes(query)) {
-          taskRow.style.display = '';
-        } else {
-          taskRow.style.display = 'none';
-        }
-      });
-    }
-
-    // Event listener for search input
-    document.getElementById('searchInput').addEventListener('input', filterTasks);
-
-    // Function to handle radio button change event
-    function handleRadioChange(radio) {
-      var selectedTaskId = radio.value;
-      var editButton = document.getElementById('editButton');
-      var deleteButton = document.getElementById('deleteButton');
-      var taskContent = radio.closest('.row').querySelector('.task-content').textContent;
-
-      // Enable edit and delete buttons and populate edit form fields
-      editButton.disabled = false;
-      deleteButton.disabled = false;
-      document.getElementById('edit_id').value = selectedTaskId;
-      document.getElementById('editTextarea').value = taskContent;
-    }
-
-    // Event listener for radio button change
-    var taskRadios = document.querySelectorAll('input[name="selectedTask"]');
-    taskRadios.forEach(function(radio) {
-      radio.addEventListener('change', function() {
-        handleRadioChange(radio);
-      });
-    });
-
-    // Event listener for delete button click
-    document.getElementById('deleteButton').addEventListener('click', function() {
-      var confirmDeleteButton = document.getElementById('confirmDeleteButton');
-      confirmDeleteButton.onclick = function() {
-        var selectedTaskId = document.querySelector('input[name="selectedTask"]:checked').value;
-        window.location.href = `../assets/partials/delete.php?id=${selectedTaskId}`;
-      };
-    });
-
-    // Event listener for edit button click (modal)
-    document.getElementById('editButton').addEventListener('click', function() {
-      var selectedTask = document.querySelector('input[name="selectedTask"]:checked');
-      if (selectedTask) {
-        var taskId = selectedTask.value;
-        var taskContent = selectedTask.closest('.row').querySelector('.task-content').textContent;
-
-        // Set values in the edit form
-        document.getElementById('edit_id').value = taskId;
-        document.getElementById('editTextarea').value = taskContent;
-      }
-    });
-  </script>
+<script src="../assets/js/script.js"></script>
 </body>
+
 </html>
